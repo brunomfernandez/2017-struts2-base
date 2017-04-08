@@ -7,11 +7,13 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class PersonaAction extends ActionSupport{
 	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String age;
 	private String gender;
 	private List<Persona> personas;
 	private long id;
+	Persona p;
 	
 	public long getId() {
 		return id;
@@ -62,11 +64,27 @@ public class PersonaAction extends ActionSupport{
 			edad = Integer.parseInt(age);
 		}catch(Exception e){
 			addActionError("Ocurrió un error con la edad");
-			return "ERROR";
+			return ERROR;
 		}
 
-		new Persona(personas.size(), name, edad, gender);
+		if (personas.size()==0) {
+			id = 1;
+			p = new Persona(id, name, edad, gender);
+			PersistentManager.getInstance().add(p);
+		}
+		else {
+			id = personas.size() + 1;
+			p = new Persona(id, name, edad, gender);
+			PersistentManager.getInstance().add(p);
+		}
 		
-		return "SUCCESS";
+		return SUCCESS;
 	}
+	
+	public String execute(){
+		personas = PersistentManager.getInstance();
+		
+		return SUCCESS;
+	}
+
 }
