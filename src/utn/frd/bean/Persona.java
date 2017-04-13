@@ -1,5 +1,4 @@
 package utn.frd.bean;
-import db.PersistentManager;
 
 public class Persona {
 	

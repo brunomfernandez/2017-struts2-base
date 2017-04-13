@@ -13,6 +13,7 @@ public class PersonaAction extends ActionSupport{
 	private String gender;
 	private List<Persona> personas;
 	private long id;
+	private static long contador;
 	Persona p;
 	
 	public long getId() {
@@ -69,12 +70,14 @@ public class PersonaAction extends ActionSupport{
 
 		if (personas.size()==0) {
 			id = 1;
+			contador = 1;
 			p = new Persona(id, name, edad, gender);
 			PersistentManager.getInstance().add(p);
 		}
 		else {
-			id = personas.size() + 1;
-			p = new Persona(id, name, edad, gender);
+			id = id + 1;
+			contador = contador + 1;
+			p = new Persona(contador, name, edad, gender);
 			PersistentManager.getInstance().add(p);
 		}
 		
@@ -86,5 +89,19 @@ public class PersonaAction extends ActionSupport{
 		
 		return SUCCESS;
 	}
+	public String delete(){
+		personas = PersistentManager.getInstance();
+		personas.removeIf(p->p.getId()==id);
+		return SUCCESS;
+}
 
+	public String modify(){
+		personas = PersistentManager.getInstance();
+		Persona persona = personas.stream().filter(p->p.getId()==id).findFirst().get();
+		id = persona.getId();
+		name = persona.getName();
+		gender = persona.getGender();
+		age = String.valueOf(persona.getAge());
+		return SUCCESS;
+}
 }
